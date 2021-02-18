@@ -8,7 +8,6 @@ import argparse
 import time
 import sys
 import os
-import ROOT
 import re
 from array import array
 import numpy as np
