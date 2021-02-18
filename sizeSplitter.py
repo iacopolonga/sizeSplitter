@@ -1,3 +1,5 @@
+# sizeSplitter.py is a useful macro when you need to split a list of files/directories according to file/directory sizes.
+# Author: Iacopo Longarini
 
 from __future__ import print_function
 from __future__ import division
@@ -65,7 +67,9 @@ if __name__ == "__main__":
     ### Define output
     outFileName = options.output
     sizeThr = options.size
-        
+
+    nFilesInput = len(inputFilesList)
+    nLinesOutput = 0
     inputFilesProcessed = []
     totalSize = 0
     nSplit = 0
@@ -76,6 +80,7 @@ if __name__ == "__main__":
         if thisSize > sizeThr:
             nSplit += 1
             writefile(outFileName, nSplit, [inputFile])
+            nLinesOutput += 1
 
         else:
             ### If size will exceed threshold
@@ -83,6 +88,7 @@ if __name__ == "__main__":
                 ### First dump collected files
                 nSplit += 1
                 writefile(outFileName, nSplit, inputFilesProcessed)
+                nLinesOutput += len(inputFilesProcessed)
                 inputFilesProcessed = []
                 totalSize = 0
                 
@@ -90,6 +96,13 @@ if __name__ == "__main__":
             inputFilesProcessed.append(inputFile)
         
     ### Check if missing some files
-    if len(inputFilesProcessed) > 1:
+    if len(inputFilesProcessed) > 0:
         nSplit += 1
         writefile(outFileName, nSplit, inputFilesProcessed)
+        nLinesOutput += len(inputFilesProcessed)
+
+    print(" > n. Input files:   ", nFilesInput )
+    print(" > n. Written lines: ", nLinesOutput)
+    if (nLinesOutput != nFilesInput ):
+        print("!!!!! n. of input files and lines wrote differs! - DO NOT TRUST RESULT")
+    
