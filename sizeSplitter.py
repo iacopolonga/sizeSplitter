@@ -15,7 +15,8 @@ import numpy as np
 def getOptions(args=sys.argv[1:]):
     ###  Argument parser ###
     parser = argparse.ArgumentParser(description="Parses command.")
-    parser.add_argument("-i","--input", nargs="+", help="Input files, expects either comma-separated or space-separated (or both)", type=str, required=True)
+    parser.add_argument("-i","--input", nargs="+", help="Input files (space/comma separated), or an input file containing paths", type=str)
+    parser.add_argument("-t","--inputTxtFile", help="Txt file containing the list of files to split", type=str)
     parser.add_argument("-o","--output", help="Your destination output file.", type=str, required=True)
     parser.add_argument("-s","--size",help="Threshold of file size (MB)" ,type=float, default=2000)
     options = parser.parse_args(args)
@@ -62,7 +63,18 @@ if __name__ == "__main__":
                     inputFilesList.append(inputFileItr)
             else:
                 inputFilesList.append(inputFile)
+
+
+    if options.inputTxtFile:
+        with open(options.inputTxtFile) as iF:
+            lines = iF.readlines()
+            inputFilesList = [line.strip() for line in lines]
+
+    if len(inputFilesList)==0:
+        print("No input files, leaving")
+        exit(-1)
     
+            
     ### Define output
     outFileName = options.output
     sizeThr = options.size
